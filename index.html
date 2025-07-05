@@ -201,11 +201,21 @@
 
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
-                const ideas = await response.json();
+                const data = await response.json();
                 
-                if (!Array.isArray(ideas)) throw new Error('Invalid response format');
-
-                displayIdeas(ideas);
+                // Handle the message format from n8n
+                if (data.message) {
+                    // Split the message into individual ideas (assuming they're separated by newlines or numbered)
+                    const ideas = data.message
+                        .split('\n')
+                        .filter(line => line.trim())
+                        .map(line => line.replace(/^\d+\.\s*/, '').trim())
+                        .filter(line => line.length > 0);
+                    
+                    displayIdeas(ideas);
+                } else {
+                    throw new Error('Invalid response format');
+                }
                 
             } catch (err) {
                 console.error('Error:', err);
