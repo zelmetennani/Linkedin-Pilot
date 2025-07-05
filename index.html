@@ -188,33 +188,21 @@
                 return;
             }
 
-            // Show loading state
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Generating...';
-            loading.style.display = 'block';
-            results.style.display = 'none';
-            error.style.display = 'none';
+            setLoadingState(true);
+            hideMessages();
 
             try {
-                const response = await fetch('https://YOUR-N8N-URL/webhook/linkedin-ideas', {
+                const response = await fetch('https://tayo.app.n8n.cloud/webhook/Linkedin-ideas', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        blog: blogContent
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ blog: blogContent })
                 });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
                 const ideas = await response.json();
                 
-                if (!Array.isArray(ideas)) {
-                    throw new Error('Invalid response format');
-                }
+                if (!Array.isArray(ideas)) throw new Error('Invalid response format');
 
                 displayIdeas(ideas);
                 
@@ -222,22 +210,23 @@
                 console.error('Error:', err);
                 showError('Failed to generate LinkedIn posts. Please check your connection and try again.');
             } finally {
-                // Reset button state
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Generate LinkedIn Posts';
-                loading.style.display = 'none';
+                setLoadingState(false);
             }
         });
 
+        function setLoadingState(isLoading) {
+            submitBtn.disabled = isLoading;
+            submitBtn.textContent = isLoading ? 'Generating...' : 'Generate LinkedIn Posts';
+            loading.style.display = isLoading ? 'block' : 'none';
+        }
+
+        function hideMessages() {
+            results.style.display = 'none';
+            error.style.display = 'none';
+        }
+
         function displayIdeas(ideas) {
-            postIdeas.innerHTML = '';
-            
-            ideas.forEach(idea => {
-                const li = document.createElement('li');
-                li.textContent = idea;
-                postIdeas.appendChild(li);
-            });
-            
+            postIdeas.innerHTML = ideas.map(idea => `<li>${idea}</li>`).join('');
             results.style.display = 'block';
         }
 
