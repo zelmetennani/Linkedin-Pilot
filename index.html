@@ -156,12 +156,14 @@
         
         <form id="blogForm">
             <div class="form-group">
-                <label for="blogContent">Paste your blog post here:</label>
-                <textarea 
-                    id="blogContent" 
-                    placeholder="Enter your blog post content..."
+                <label for="blogUrl">Blog Post URL:</label>
+                <input 
+                    type="url" 
+                    id="blogUrl" 
+                    placeholder="https://example.com/blog-post"
                     required
-                ></textarea>
+                    style="width: 100%; padding: 16px; border: 2px solid #e0e6ed; border-radius: 8px; font-size: 16px; font-family: inherit; transition: border-color 0.3s ease;"
+                />
             </div>
             
             <button type="submit" class="submit-btn" id="submitBtn">
@@ -192,10 +194,10 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const blogContent = document.getElementById('blogContent').value.trim();
+            const blogUrl = document.getElementById('blogUrl').value.trim();
             
-            if (!blogContent) {
-                showError('Please enter some blog content.');
+            if (!blogUrl) {
+                showError('Please enter a blog post URL.');
                 return;
             }
 
@@ -206,7 +208,7 @@
                 const response = await fetch('/.netlify/functions/generateIdeas', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ blog: blogContent })
+                    body: JSON.stringify({ url: blogUrl })
                 });
 
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);

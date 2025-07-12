@@ -22,20 +22,20 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    const { blog } = JSON.parse(event.body);
+    const { url } = JSON.parse(event.body);
     
-    if (!blog || !blog.trim()) {
+    if (!url || !url.trim()) {
       return {
         statusCode: 400,
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*'
         },
-        body: JSON.stringify({ error: 'Blog content is required' })
+        body: JSON.stringify({ error: 'URL is required' })
       };
     }
 
-    const ideas = await generateLinkedInIdeas(blog);
+    const ideas = await generateLinkedInIdeas(url);
     
     return {
       statusCode: 200,
@@ -58,17 +58,16 @@ exports.handler = async (event, context) => {
   }
 };
 
-async function generateLinkedInIdeas(blogContent) {
+async function generateLinkedInIdeas(url) {
   const apiKey = process.env.OPENAI_API_KEY;
   
   if (!apiKey) {
     throw new Error('OPENAI_API_KEY environment variable is not set');
   }
   
-  const prompt = `Generate 5 engaging LinkedIn post ideas from this blog content. Each idea should be concise, professional, and highlight key insights. Format as a numbered list.
+  const prompt = `Read the content from this URL: ${url}
 
-Blog content:
-${blogContent.substring(0, 3000)}
+Then generate 5 engaging LinkedIn post ideas based on the article/blog post content. Each idea should be concise, professional, and highlight key insights from the content. Format as a numbered list.
 
 Please provide 5 LinkedIn post ideas:`;
 

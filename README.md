@@ -38,15 +38,15 @@ A web application that generates LinkedIn post ideas from blog content using Ope
 ## API Endpoint
 
 - **POST** `/.netlify/functions/generateIdeas`
-- **Body**: `{ "blog": "Your blog content here..." }`
+- **Body**: `{ "url": "https://example.com/blog-post" }`
 - **Response**: `{ "message": "1. First idea...\n\n2. Second idea...\n\n..." }`
 
 ## How It Works
 
-1. User pastes blog content into the textarea
+1. User enters a blog post URL
 2. Frontend sends POST request to Netlify Function
-3. Function sends content to OpenAI GPT-3.5-turbo
-4. OpenAI generates 5 LinkedIn post ideas
+3. Function sends URL to OpenAI GPT-3.5-turbo with web search capabilities
+4. OpenAI reads the content and generates 5 LinkedIn post ideas
 5. Ideas are parsed and returned to frontend
 6. Frontend displays ideas in beautiful list format
 
