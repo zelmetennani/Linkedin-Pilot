@@ -203,7 +203,7 @@
             hideMessages();
 
             try {
-                const response = await fetch('https://tayo.app.n8n.cloud/webhook/Linkedin-ideas', {
+                const response = await fetch('/.netlify/functions/generateIdeas', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ blog: blogContent })
