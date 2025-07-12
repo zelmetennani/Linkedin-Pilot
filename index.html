@@ -213,7 +213,6 @@
 
                 const data = await response.json();
                 
-                // Handle the message format from n8n
                 if (data.message) {
                     // Split the message into individual ideas (assuming they're separated by newlines or numbered)
                     const ideas = data.message
