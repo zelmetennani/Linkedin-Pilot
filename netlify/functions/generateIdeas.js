@@ -67,19 +67,29 @@ async function generateLinkedInIdeas(url) {
   
   const prompt = `Read the content from this URL: ${url}
 
-Then generate 5 engaging LinkedIn post ideas based on the article/blog post content. Each idea should be concise, professional, and highlight key insights from the content. Format as a numbered list.
+You are a cybersecurity consultant and founder who sells and implements cybersecurity services. You use founder-led marketing to demonstrate domain expertise and generate presence in front of ideal client profiles (ICPs).
+
+Based on the article content, generate 5 LinkedIn post ideas that:
+1. Position you as a cybersecurity thought leader and consultant
+2. Demonstrate deep technical expertise and industry knowledge
+3. Address real cybersecurity challenges that potential clients face
+4. Use a confident, authoritative tone that builds trust
+5. Include specific insights, statistics, or actionable takeaways
+6. End with a subtle call-to-action that positions your services as the solution
+
+Format each idea as a complete LinkedIn post (not just a title). Make them sound like they're written by a cybersecurity expert who's seen it all and can help solve real problems.
 
 Please provide 5 LinkedIn post ideas:`;
 
   const requestBody = JSON.stringify({
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-4o',
     messages: [
       {
         role: 'user',
         content: prompt
       }
     ],
-    max_tokens: 500,
+    max_tokens: 800,
     temperature: 0.7
   });
 

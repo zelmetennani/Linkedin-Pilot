@@ -1,6 +1,6 @@
-# LinkedIn Pilot
+# LinkedIn Pilot - Cybersecurity Consultant Edition
 
-A web application that generates LinkedIn post ideas from blog content using OpenAI's GPT-3.5-turbo via Netlify Functions.
+A web application that generates LinkedIn post ideas from blog content, specifically designed for cybersecurity consultants and founders using founder-led marketing to demonstrate domain expertise.
 
 ## Features
 
@@ -14,7 +14,7 @@ A web application that generates LinkedIn post ideas from blog content using Ope
 
 - **Frontend**: Single HTML page with vanilla JavaScript
 - **Backend**: Netlify Function (`generateIdeas.js`)
-- **AI**: OpenAI GPT-3.5-turbo via OpenAI API
+- **AI**: OpenAI GPT-4o via OpenAI API with web browsing capabilities
 
 ## Setup
 
@@ -43,11 +43,11 @@ A web application that generates LinkedIn post ideas from blog content using Ope
 
 ## How It Works
 
-1. User enters a blog post URL
+1. User enters a cybersecurity-related blog post URL
 2. Frontend sends POST request to Netlify Function
-3. Function sends URL to OpenAI GPT-3.5-turbo with web search capabilities
-4. OpenAI reads the content and generates 5 LinkedIn post ideas
-5. Ideas are parsed and returned to frontend
+3. Function sends URL to OpenAI GPT-4o with web browsing capabilities
+4. OpenAI reads the content and generates 5 cybersecurity-focused LinkedIn post ideas
+5. Ideas are formatted as complete posts with thought leadership positioning
 6. Frontend displays ideas in beautiful list format
 
 ## File Structure
