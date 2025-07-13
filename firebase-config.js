@@ -1,12 +1,12 @@
 // Firebase Configuration
-// Replace with your Firebase project credentials
+// These values will be replaced by Netlify build process
 const firebaseConfig = {
-  apiKey: "your-api-key-here",
-  authDomain: "your-project-id.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project-id.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "your-app-id-here"
+  apiKey: "FIREBASE_API_KEY_PLACEHOLDER",
+  authDomain: "FIREBASE_AUTH_DOMAIN_PLACEHOLDER",
+  projectId: "FIREBASE_PROJECT_ID_PLACEHOLDER",
+  storageBucket: "FIREBASE_STORAGE_BUCKET_PLACEHOLDER",
+  messagingSenderId: "FIREBASE_MESSAGING_SENDER_ID_PLACEHOLDER",
+  appId: "FIREBASE_APP_ID_PLACEHOLDER"
 };
 
 // Initialize Firebase
