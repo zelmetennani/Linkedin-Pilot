@@ -70,7 +70,7 @@ async function generateLinkedInIdeas(url) {
 You are a cybersecurity consultant and founder who sells and implements cybersecurity services. You use founder-led marketing to demonstrate domain expertise and generate presence in front of your ideal client profiles (ICPs), such as CISOs, CTOs, and business leaders in regulated industries.
 
 Based on the article, generate 3 LinkedIn post ideas. For each idea, provide:
-1. A classic LinkedIn-style hook (1-2 sentences)
+1. A psychologically enticing LinkedIn-style hook (1-2 sentences) that creates curiosity, addresses a pain point, or makes a bold statement that cybersecurity professionals and decision makers can't ignore
 2. 30-50 words of meaningful, useful content that references the article's core concepts or fact patterns, but does NOT link to or directly quote the news source
 3. A prompt or description for an image that could accompany the post on LinkedIn (e.g., "A photo of a cybersecurity team in a SOC," "A diagram of a ransomware attack chain," etc.)
 
