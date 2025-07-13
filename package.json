@@ -1,0 +1,27 @@
+{
+  "name": "linkedin-copilot-saas",
+  "version": "1.0.0",
+  "description": "LinkedIn CoPilot SaaS with Firebase Auth and Stripe Payments",
+  "main": "index.html",
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "echo 'No build step required'",
+    "deploy": "netlify deploy --prod"
+  },
+  "dependencies": {
+    "firebase-admin": "^11.10.1",
+    "stripe": "^13.3.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^15.0.0"
+  },
+  "keywords": [
+    "linkedin",
+    "saas",
+    "firebase",
+    "stripe",
+    "netlify"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+} 

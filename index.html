@@ -3,8 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LinkedIn CoPilot</title>
+    <title>LinkedIn CoPilot - SaaS Edition</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE2IDJMMjggMTJWMjBDMjggMjQuNDE4MyAyNC40MTgzIDI4IDIwIDI4SDEyQzcuNTgxNzIgMjggNCAyNC40MTgzIDQgMjBWMTJMMTYgMloiIGZpbGw9IiMwMEE4N0UiLz4KPHBhdGggZD0iTTE2IDZMMjQgMTNWMjBDMjQgMjIuMjA5MSAyMi4yMDkxIDI0IDIwIDI0SDEyQzkuNzkwODYgMjQgOCAyMi4yMDkxIDggMjBWMTZMMTYgNloiIGZpbGw9IiMwQzAwOTEiLz4KPHBhdGggZD0iTTE2IDEwTDIwIDE0VjIwQzIwIDIxLjEwNDYgMTkuMTA0NiAyMiAxOCAyMkgxNEMxMi44OTU0IDIyIDEyIDIxLjEwNDYgMTIgMjBWMTRMMTYgMTBaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <!-- Stripe SDK -->
+    <script src="https://js.stripe.com/v3/"></script>
     <style>
         * {
             margin: 0;
@@ -232,11 +238,285 @@
             font-size: 1.1rem;
             line-height: 1.5;
         }
+
+        /* Authentication Styles */
+        .auth-section {
+            margin-bottom: 20px;
+        }
+
+        .google-signin-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            color: #333;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .google-signin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .google-signin-btn img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #2c3e50;
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 4px solid #00A87E;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .user-name {
+            color: white;
+            font-weight: 600;
+        }
+
+        .sign-out-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .sign-out-btn:hover {
+            background: #c0392b;
+        }
+
+        /* Usage Styles */
+        .usage-section {
+            margin-bottom: 20px;
+        }
+
+        .usage-stats {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #2c3e50;
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 4px solid #0C0091;
+        }
+
+        .usage-text {
+            color: #ecf0f1;
+            font-size: 1rem;
+        }
+
+        .plan-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .plan-badge.free {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .plan-badge.pro {
+            background: #00A87E;
+            color: white;
+        }
+
+        .plan-badge.unlimited {
+            background: #0C0091;
+            color: white;
+        }
+
+        .upgrade-btn {
+            background: #00A87E;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .upgrade-btn:hover {
+            background: #00d4a3;
+            transform: translateY(-1px);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: #34495e;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 15px;
+        }
+
+        .close:hover {
+            color: white;
+        }
+
+        .modal-content h2 {
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .modal-content p {
+            color: #ecf0f1;
+            margin-bottom: 30px;
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .pricing-card {
+            background: #2c3e50;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card.featured {
+            border-color: #00A87E;
+            transform: scale(1.05);
+        }
+
+        .pricing-card h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .price {
+            color: #00A87E;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: #bdc3c7;
+        }
+
+        .pricing-card ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 25px;
+        }
+
+        .pricing-card li {
+            color: #ecf0f1;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .pricing-card li:before {
+            content: "✓ ";
+            color: #00A87E;
+            font-weight: bold;
+        }
+
+        .upgrade-plan-btn {
+            background: #0C0091;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .upgrade-plan-btn:hover {
+            background: #00A87E;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .pricing-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-card.featured {
+                transform: none;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>LinkedIn CoPilot</h1>
+        
+        <!-- Authentication Section -->
+        <div id="authSection" class="auth-section"></div>
+        
+        <!-- Usage Info Section -->
+        <div id="usageInfo" class="usage-section"></div>
+        
         <div class="info-box">
             <span class="info-icon">💡</span>
             <span class="info-text">
@@ -271,8 +551,45 @@
             <h2>LinkedIn Post Ideas</h2>
             <ul id="postIdeas"></ul>
         </div>
+        
+        <!-- Upgrade Modal -->
+        <div id="upgradeModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="hideUpgradeModal()">&times;</span>
+                <h2>Upgrade Your Plan</h2>
+                <p>You've reached your free plan limit. Upgrade to continue generating LinkedIn post ideas!</p>
+                
+                <div class="pricing-cards">
+                    <div class="pricing-card">
+                        <h3>Pro Plan</h3>
+                        <div class="price">$19<span>/month</span></div>
+                        <ul>
+                            <li>50 generations per month</li>
+                            <li>Priority support</li>
+                            <li>Advanced analytics</li>
+                        </ul>
+                        <button onclick="handleUpgrade('pro')" class="upgrade-plan-btn">Upgrade to Pro</button>
+                    </div>
+                    
+                    <div class="pricing-card featured">
+                        <h3>Unlimited Plan</h3>
+                        <div class="price">$49<span>/month</span></div>
+                        <ul>
+                            <li>Unlimited generations</li>
+                            <li>Priority support</li>
+                            <li>Advanced analytics</li>
+                            <li>Custom branding</li>
+                        </ul>
+                        <button onclick="handleUpgrade('unlimited')" class="upgrade-plan-btn">Upgrade to Unlimited</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+    <script src="payments.js"></script>
     <script>
         const form = document.getElementById('blogForm');
         const submitBtn = document.getElementById('submitBtn');
@@ -283,6 +600,20 @@
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            // Check if user is authenticated
+            if (!authManager.user) {
+                showError('Please sign in to generate LinkedIn posts.');
+                return;
+            }
+
+            // Check usage limits
+            const canGenerate = await authManager.incrementUsage();
+            if (!canGenerate) {
+                showError('You have reached your usage limit. Please upgrade your plan to continue.');
+                showUpgradeModal();
+                return;
+            }
             
             const blogUrl = document.getElementById('blogUrl').value.trim();
             
@@ -361,6 +692,14 @@
         function showError(message) {
             error.textContent = message;
             error.style.display = 'block';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('upgradeModal');
+            if (event.target === modal) {
+                hideUpgradeModal();
+            }
         }
     </script>
 </body>
