@@ -67,19 +67,14 @@ async function generateLinkedInIdeas(url) {
   
   const prompt = `Read the content from this URL: ${url}
 
-You are a cybersecurity consultant and founder who sells and implements cybersecurity services. You use founder-led marketing to demonstrate domain expertise and generate presence in front of ideal client profiles (ICPs).
+You are a cybersecurity consultant and founder who sells and implements cybersecurity services. You use founder-led marketing to demonstrate domain expertise and generate presence in front of your ideal client profiles (ICPs), such as CISOs, CTOs, and business leaders in regulated industries.
 
-Based on the article content, generate 5 LinkedIn post ideas that:
-1. Position you as a cybersecurity thought leader and consultant
-2. Demonstrate deep technical expertise and industry knowledge
-3. Address real cybersecurity challenges that potential clients face
-4. Use a confident, authoritative tone that builds trust
-5. Include specific insights, statistics, or actionable takeaways
-6. End with a subtle call-to-action that positions your services as the solution
+Based on the article, generate 3 LinkedIn post ideas. For each idea, provide:
+1. A classic LinkedIn-style hook (1-2 sentences)
+2. 30-50 words of meaningful, useful content that references the article's core concepts or fact patterns, but does NOT link to or directly quote the news source
+3. A prompt or description for an image that could accompany the post on LinkedIn (e.g., "A photo of a cybersecurity team in a SOC," "A diagram of a ransomware attack chain," etc.)
 
-Format each idea as a complete LinkedIn post (not just a title). Make them sound like they're written by a cybersecurity expert who's seen it all and can help solve real problems.
-
-Please provide 5 LinkedIn post ideas:`;
+Format your response as a JSON array of 3 objects, each with keys: "hook", "content", and "image". Do not include any extra text or explanation, just the JSON array.`;
 
   const requestBody = JSON.stringify({
     model: 'gpt-4o',
@@ -89,7 +84,7 @@ Please provide 5 LinkedIn post ideas:`;
         content: prompt
       }
     ],
-    max_tokens: 800,
+    max_tokens: 900,
     temperature: 0.7
   });
 
@@ -123,22 +118,24 @@ Please provide 5 LinkedIn post ideas:`;
           }
           
           const content = response.choices[0].message.content;
-          
-          // Parse the numbered list into individual ideas
-          const ideas = content
-            .split('\n')
-            .map(line => line.trim())
-            .filter(line => line.length > 0)
-            .map(line => line.replace(/^\d+\.\s*/, '').trim())
-            .filter(line => line.length > 0)
-            .slice(0, 5); // Ensure we have max 5 ideas
-          
-          if (ideas.length === 0) {
-            reject(new Error('No ideas generated from OpenAI API'));
+          let ideas;
+          try {
+            ideas = JSON.parse(content);
+          } catch {
+            // fallback: try to extract JSON array from the response
+            const match = content.match(/\[.*\]/s);
+            if (match) {
+              ideas = JSON.parse(match[0]);
+            } else {
+              reject(new Error('Failed to parse OpenAI API response as JSON array'));
+              return;
+            }
+          }
+          if (!Array.isArray(ideas) || ideas.length !== 3) {
+            reject(new Error('Invalid response format from OpenAI API'));
             return;
           }
-          
-          resolve(ideas.join('\n\n'));
+          resolve(ideas);
         } catch (error) {
           reject(new Error('Failed to parse OpenAI API response'));
         }
