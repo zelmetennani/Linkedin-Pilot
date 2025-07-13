@@ -132,11 +132,72 @@
         .results li {
             background: #2c3e50;
             color: white;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 8px;
+            padding: 0;
+            margin-bottom: 20px;
+            border-radius: 12px;
             border-left: 4px solid #0C0091;
+            overflow: hidden;
+        }
+
+        .post-idea {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .idea-header {
+            background: #34495e;
+            padding: 15px 20px;
+            border-bottom: 1px solid #4a5f7a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .idea-number {
+            background: #0C0091;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .idea-header h3 {
+            margin: 0;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .idea-content {
+            padding: 20px;
+        }
+
+        .hook-section, .content-section, .image-section {
+            margin-bottom: 15px;
+        }
+
+        .hook-section strong, .content-section strong, .image-section strong {
+            color: #00A87E;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .hook-section p, .content-section p {
+            margin: 0;
             line-height: 1.6;
+            color: #ecf0f1;
+        }
+
+        .image-prompt {
+            background: #34495e;
+            padding: 10px;
+            border-radius: 6px;
+            border-left: 3px solid #00A87E;
+            font-style: italic;
+            color: #bdc3c7;
+            margin: 0;
         }
 
         .error {
@@ -216,13 +277,8 @@
                 const data = await response.json();
                 
                 if (data.message) {
-                    // Split the message into individual ideas (assuming they're separated by newlines or numbered)
-                    const ideas = data.message
-                        .split('\n')
-                        .filter(line => line.trim())
-                        .map(line => line.replace(/^\d+\.\s*/, '').trim())
-                        .filter(line => line.length > 0);
-                    
+                    // Handle the new structured format with hook, content, and image
+                    const ideas = data.message;
                     displayIdeas(ideas);
                 } else {
                     throw new Error('Invalid response format');
@@ -248,7 +304,28 @@
         }
 
         function displayIdeas(ideas) {
-            postIdeas.innerHTML = ideas.map(idea => `<li>${idea}</li>`).join('');
+            postIdeas.innerHTML = ideas.map((idea, index) => `
+                <li class="post-idea">
+                    <div class="idea-header">
+                        <span class="idea-number">#${index + 1}</span>
+                        <h3>LinkedIn Post Idea</h3>
+                    </div>
+                    <div class="idea-content">
+                        <div class="hook-section">
+                            <strong>Hook:</strong>
+                            <p>${idea.hook}</p>
+                        </div>
+                        <div class="content-section">
+                            <strong>Content:</strong>
+                            <p>${idea.content}</p>
+                        </div>
+                        <div class="image-section">
+                            <strong>Image Suggestion:</strong>
+                            <p class="image-prompt">${idea.image}</p>
+                        </div>
+                    </div>
+                </li>
+            `).join('');
             results.style.display = 'block';
         }
 
