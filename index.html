@@ -36,7 +36,7 @@
                 transform: translateY(0);
             }
             50% {
-                transform: translateY(-10px);
+                transform: translateY(-5px);
             }
         }
 
@@ -209,12 +209,40 @@
             border-left: 4px solid #e74c3c;
             display: none;
         }
+
+        .info-box {
+            background: #2980b9;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-left: 4px solid #3498db;
+        }
+
+        .info-icon {
+            font-size: 2rem;
+            color: #3498db;
+        }
+
+        .info-text {
+            color: #ecf0f1;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>LinkedIn Pilot</h1>
-        
+        <div class="info-box">
+            <span class="info-icon">💡</span>
+            <span class="info-text">
+                <strong>What is this?</strong> <br>
+                Paste a blog or article URL below and get 3 founder-led, cybersecurity-focused LinkedIn post ideas—each with a hook, expert content, and an image suggestion. Perfect for consultants and thought leaders who want to build presence and trust with their ideal clients.
+            </span>
+        </div>
         <form id="blogForm">
             <div class="form-group">
                 <label for="blogUrl">Blog Post URL:</label>
